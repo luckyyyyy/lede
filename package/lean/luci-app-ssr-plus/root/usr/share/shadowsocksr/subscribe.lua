@@ -55,10 +55,10 @@ local function urlEncode(szText)
 end
 
 local function get_urldecode(h)
-	return schar(tonumber(h, 16))
+    return schar(tonumber(h, 16))
 end
 local function UrlDecode(szText)
-	return szText:gsub("+", " "):gsub("%%(%x%x)", get_urldecode)
+    return szText:gsub("+", " "):gsub("%%(%x%x)", get_urldecode)
 end
 
 -- trim
@@ -138,20 +138,45 @@ local function processData(szType, content)
         result.type = 'v2ray'
         result.server = info.add
         result.server_port = info.port
-        result.tcp_guise = "none"
+        result.vmess_id = info.id
         result.transport = info.net
         result.alter_id = info.aid
-        result.vmess_id = info.id
         result.alias = info.ps
+        result.mux = 1
+        result.concurrency = 8
+        if info.net == 'ws'then
         result.ws_host = info.host
         result.ws_path = info.path
+        end
+        if info.net == 'h2'then
         result.h2_host = info.host
         result.h2_path = info.path
+        end
+        if info.net == 'tcp'then
+        result.tcp_guise = info.type
+        result.http_host = info.host
+        result.http_path = info.path
+        end
+        if info.net == 'kcp'then
+        result.kcp_guise = info.type
+        result.mtu = 1350
+        result.tti = 50
+        result.uplink_capacity = 5
+        result.downlink_capacity = 20
+        result.read_buffer_size = 2
+        result.write_buffer_size = 2
+        end
+        if info.net == 'quic'then
+        result.quic_guise = info.type
+        result.quic_key = info.key
+        result.quic_security = info.securty
+        end
         if not info.security then
             result.security = "auto"
         end
         if info.tls == "tls" or info.tls == "1" then
             result.tls = "1"
+            result.tls_host = info.host
         else
             result.tls = "0"
         end
@@ -171,8 +196,8 @@ local function processData(szType, content)
             result.server_port = query[1]
             -- local params = {}
             -- for k, v in pairs(split(query[2], '&')) do
-            --     local t = split(v, '=')
-            --     params[t[1]] = t[2]
+            --   local t = split(v, '=')
+            --   params[t[1]] = t[2]
             -- end
             -- 这里似乎没什么用 我看数据结构没有写插件的支持 先抛弃
         else
@@ -236,6 +261,7 @@ local execute = function()
                 end
                 for _, v in ipairs(node) do
                     if v then
+                        v = trim(v)
                         local result, hash
                         if szType == 'ssd' then
                             result, hash = processData(szType, v)

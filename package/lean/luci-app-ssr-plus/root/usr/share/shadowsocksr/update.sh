@@ -23,4 +23,14 @@ if [ -s "/tmp/gfwnew.txt" ];then
   fi
 fi
 
+wget-ssl --no-check-certificate -O - https://easylist-downloads.adblockplus.org/easylistchina+easylist.txt > /tmp/adnew.conf
+/usr/bin/ssr-ad
+
+if [ -s "/tmp/ad.conf" ];then
+  if ( ! cmp -s /tmp/ad.conf /etc/dnsmasq.ssr/ad.conf );then
+    mv /tmp/ad.conf /etc/dnsmasq.ssr/ad.conf
+    echo "copy"
+  fi
+fi
+
 /etc/init.d/shadowsocksr restart

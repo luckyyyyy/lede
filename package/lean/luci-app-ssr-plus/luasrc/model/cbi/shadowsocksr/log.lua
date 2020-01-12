@@ -10,7 +10,7 @@ function t.cfgvalue()
   for line in logs do
     s = line .. "\n" .. s
   end
-	return s
+    return s
 end
 t.readonly="readonly"
 

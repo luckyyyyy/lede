@@ -54,8 +54,8 @@ o.template = "shadowsocksr/subscribe"
 -- o.write = function()
 --   luci.sys.call("lua /root/subscribe.lua  >>/tmp/ssrplus.log 2>&1")
 --   -- luci.sys.call("echo 123  >>/tmp/ssrplus.log 2>&1")
---    --luci.sys.exec("bash /usr/share/shadowsocksr/subscribe.sh >>/tmp/ssrplus.log 2>&1")
---    luci.http.redirect(luci.dispatcher.build_url("admin", "services", "shadowsocksr", "servers"))
+--  --luci.sys.exec("bash /usr/share/shadowsocksr/subscribe.sh >>/tmp/ssrplus.log 2>&1")
+--  luci.http.redirect(luci.dispatcher.build_url("admin", "services", "shadowsocksr", "servers"))
 -- end
 
 
@@ -78,45 +78,45 @@ s.sortable = false
 s.template = "cbi/tblsection"
 s.extedit = luci.dispatcher.build_url("admin/services/shadowsocksr/servers/%s")
 function s.create(...)
-	local sid = TypedSection.create(...)
-	if sid then
-		luci.http.redirect(s.extedit % sid)
-		return
-	end
+    local sid = TypedSection.create(...)
+    if sid then
+        luci.http.redirect(s.extedit % sid)
+        return
+    end
 end
 
 o = s:option(DummyValue, "type", translate("Type"))
 function o.cfgvalue(...)
-	return Value.cfgvalue(...) or translate("")
+    return Value.cfgvalue(...) or translate("")
 end
 
 o = s:option(DummyValue, "alias", translate("Alias"))
 function o.cfgvalue(...)
-	return Value.cfgvalue(...) or translate("None")
+    return Value.cfgvalue(...) or translate("None")
 end
 
 o = s:option(DummyValue, "server", translate("Server Address"))
 function o.cfgvalue(...)
-	return Value.cfgvalue(...) or "?"
+    return Value.cfgvalue(...) or "?"
 end
 
 o = s:option(DummyValue, "server_port", translate("Server Port"))
 function o.cfgvalue(...)
-	return Value.cfgvalue(...) or "?"
+    return Value.cfgvalue(...) or "?"
 end
 
 if nixio.fs.access("/usr/bin/kcptun-client") then
 
 o = s:option(DummyValue, "kcp_enable", translate("KcpTun"))
 function o.cfgvalue(...)
-	return Value.cfgvalue(...) or "?"
+    return Value.cfgvalue(...) or "?"
 end
 
 end
 
 o = s:option(DummyValue, "switch_enable", translate("Auto Switch"))
 function o.cfgvalue(...)
-	return Value.cfgvalue(...) or "0"
+    return Value.cfgvalue(...) or "0"
 end
 
 o = s:option(DummyValue, "server_port", translate("Socket Connected"))

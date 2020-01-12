@@ -21,77 +21,77 @@ end
 
 local server_table = {}
 local encrypt_methods = {
-	"none",
-	"table",
-	"rc4",
-	"rc4-md5-6",
-	"rc4-md5",
-	"aes-128-cfb",
-	"aes-192-cfb",
-	"aes-256-cfb",
-	"aes-128-ctr",
-	"aes-192-ctr",
-	"aes-256-ctr",	
-	"bf-cfb",
-	"camellia-128-cfb",
-	"camellia-192-cfb",
-	"camellia-256-cfb",
-	"cast5-cfb",
-	"des-cfb",
-	"idea-cfb",
-	"rc2-cfb",
-	"seed-cfb",
-	"salsa20",
-	"chacha20",
-	"chacha20-ietf",
+    "none",
+    "table",
+    "rc4",
+    "rc4-md5-6",
+    "rc4-md5",
+    "aes-128-cfb",
+    "aes-192-cfb",
+    "aes-256-cfb",
+    "aes-128-ctr",
+    "aes-192-ctr",
+    "aes-256-ctr",
+    "bf-cfb",
+    "camellia-128-cfb",
+    "camellia-192-cfb",
+    "camellia-256-cfb",
+    "cast5-cfb",
+    "des-cfb",
+    "idea-cfb",
+    "rc2-cfb",
+    "seed-cfb",
+    "salsa20",
+    "chacha20",
+    "chacha20-ietf",
 }
 
 local encrypt_methods_ss = {
-	-- aead
-	"aes-128-gcm",
-	"aes-192-gcm",
-	"aes-256-gcm",
-	"chacha20-ietf-poly1305",
-	"xchacha20-ietf-poly1305",
-	-- stream
-	"table",
-	"rc4",
-	"rc4-md5",
-	"aes-128-cfb",
-	"aes-192-cfb",
-	"aes-256-cfb",
-	"aes-128-ctr",
-	"aes-192-ctr",
-	"aes-256-ctr",
-	"bf-cfb",
-	"camellia-128-cfb",
-	"camellia-192-cfb",
-	"camellia-256-cfb",
-	"salsa20",
-	"chacha20",
-	"chacha20-ietf",
+    -- aead
+    "aes-128-gcm",
+    "aes-192-gcm",
+    "aes-256-gcm",
+    "chacha20-ietf-poly1305",
+    "xchacha20-ietf-poly1305",
+    -- stream
+    "table",
+    "rc4",
+    "rc4-md5",
+    "aes-128-cfb",
+    "aes-192-cfb",
+    "aes-256-cfb",
+    "aes-128-ctr",
+    "aes-192-ctr",
+    "aes-256-ctr",
+    "bf-cfb",
+    "camellia-128-cfb",
+    "camellia-192-cfb",
+    "camellia-256-cfb",
+    "salsa20",
+    "chacha20",
+    "chacha20-ietf",
 }
 
 local protocol = {
-	"origin",
-	"verify_deflate",
-	"auth_sha1_v4",
-	"auth_aes128_sha1",
-	"auth_aes128_md5",
-	"auth_chain_a",
-	"auth_chain_b",
-	"auth_chain_c",
-	"auth_chain_d",
-	"auth_chain_e",
-	"auth_chain_f",
+    "origin",
+    "verify_deflate",
+    "auth_sha1_v4",
+    "auth_aes128_sha1",
+    "auth_aes128_md5",
+    "auth_chain_a",
+    "auth_chain_b",
+    "auth_chain_c",
+    "auth_chain_d",
+    "auth_chain_e",
+    "auth_chain_f",
 }
 
 obfs = {
-	"plain",
-	"http_simple",
-	"http_post",
-	"random_head",
-	"tls1.2_ticket_auth",
+    "plain",
+    "http_simple",
+    "http_post",
+    "random_head",
+    "tls1.2_ticket_auth",
 }
 
 local securitys = {
@@ -105,8 +105,8 @@ local securitys = {
 m = Map(shadowsocksr, translate("Edit ShadowSocksR Server"))
 m.redirect = luci.dispatcher.build_url("admin/services/shadowsocksr/servers")
 if m.uci:get(shadowsocksr, sid) ~= "servers" then
-	luci.http.redirect(m.redirect) 
-	return
+    luci.http.redirect(m.redirect)
+    return
 end
 
 -- [[ Servers Setting ]]--
@@ -114,7 +114,7 @@ s = m:section(NamedSection, sid, "servers")
 s.anonymous = true
 s.addremove   = false
 
-o = s:option(DummyValue,"ssr_url","SS/SSR/V2RAY/TROJAN URL") 
+o = s:option(DummyValue,"ssr_url","SS/SSR/V2RAY/TROJAN URL")
 o.rawhtml  = true
 o.template = "shadowsocksr/ssrurl"
 o.value =sid
@@ -341,9 +341,9 @@ o:depends("type", "v2ray")
 o:depends("type", "trojan")
 
 o = s:option(Value, "tls_host", translate("TLS Host"))
+--o:depends("type", "trojan")
 o:depends("tls", "1")
 o.rmempty = true
-o:depends("type", "trojan")
 
 -- [[ Mux ]]--
 o = s:option(Flag, "mux", translate("Mux"))
@@ -385,13 +385,13 @@ o = s:option(Value, "kcp_port", translate("KcpTun Port"))
 o.datatype = "port"
 o.default = 4000
 function o.validate(self, value, section)
-		local kcp_file="/usr/bin/kcptun-client"
-		local enable = kcp_enable:formvalue(section) or kcp_enable.disabled
-		if enable == kcp_enable.enabled then
+        local kcp_file="/usr/bin/kcptun-client"
+        local enable = kcp_enable:formvalue(section) or kcp_enable.disabled
+        if enable == kcp_enable.enabled then
     if not fs.access(kcp_file)  then
         return nil, translate("Haven't a Kcptun executable file")
     elseif  not isKcptun(kcp_file) then
-        return nil, translate("Not a Kcptun executable file")    
+        return nil, translate("Not a Kcptun executable file")
     end
     end
 
